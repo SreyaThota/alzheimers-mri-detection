@@ -1,106 +1,43 @@
 # Alzheimer's Disease Detection from Brain MRI
 
-![Python](https://img.shields.io/badge/Python-3-blue)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-Keras-orange)
-![Flask](https://img.shields.io/badge/Web-Flask-lightgrey)
-![Status](https://img.shields.io/badge/status-academic%20prototype-yellow)
+A B.Tech final-year team project (RGUKT Basar, 2023–2024). A convolutional neural network (CNN) classifies a brain MRI image into one of four dementia stages, and a Flask web app lets a user upload an image and see the prediction.
 
-A deep learning project that looks at a **brain MRI scan** and predicts which **stage of dementia** it shows. A convolutional neural network (CNN) does the classification, and a small **Flask web app** lets anyone upload a scan and see the result in the browser.
+> **Academic prototype only.** Not a medical device and not validated for clinical use.
 
-B.Tech final-year project, RGUKT Basar (2023–2024).
+## Objective
+Alzheimer's disease is the most common form of dementia and has no cure, so detecting it early matters. Earlier approaches we reviewed used tabular patient data (such as age and number of visits) with classical models like SVM and Random Forest, where the data is noisy and feature extraction is slow. This project classifies the **MRI image directly** with a CNN instead.
 
-> ⚠️ **Research and teaching prototype only.** This is not a medical device and has not been validated for clinical use. Do not use it to diagnose anyone.
+## Why brain MRI
+Alzheimer's disease causes a gradual loss of brain tissue, especially in memory-related regions such as the hippocampus, and this shrinkage is visible on structural MRI scans. MRI is also non-invasive, so it suits an image-based classification approach.
 
----
+## Classes predicted
+| Class |
+|---|
+| No Dementia |
+| Very Mild Dementia |
+| Mild Dementia |
+| Moderate Dementia |
 
-## Contents
-- [The problem](#the-problem)
-- [What the app does](#what-the-app-does)
-- [How it works](#how-it-works)
-- [Demo](#demo)
-- [Repository structure](#repository-structure)
-- [Testing](#testing)
-- [Tech stack](#tech-stack)
-- [Limitations](#limitations)
-- [Team](#team)
-- [References](#references)
+## Model
+- Input: brain MRI image resized to **176 × 176**
+- Stacked convolution and max-pooling blocks, followed by fully connected (dense) layers
+- Output: one of the **4 classes** above
+- Training used image augmentation and oversampling to balance the classes, since the Moderate Dementia class has far fewer images than the others
 
----
+![General CNN illustration](docs/cnn-model-diagram.png)
 
-## The problem
-Alzheimer's disease is the most common form of dementia and has no cure, so **catching it early** matters.
+*General illustration of how a CNN classifies an MRI image (convolution and pooling, then fully connected layers). The figure shows two outputs for simplicity; our model predicts four classes.*
 
-Earlier approaches we reviewed used **tabular patient data** (age, number of visits, and so on) with classical models such as SVM and Random Forest. That data is noisy and hand-crafting features from it is slow.
+## How the web application works
+1. The user opens the web page and uploads a brain MRI image (`.jpg`).
+2. The Flask app saves the file and resizes the image to 176 × 176.
+3. The trained Keras model predicts a score for each of the four classes.
+4. The class with the highest score is shown on the page as the result.
 
-**Our approach:** skip the tabular data and classify the **MRI image directly** with a CNN, which learns the useful features on its own.
-
-## What the app does
-1. You upload a brain MRI image (`.jpg`) in the browser.
-2. The image is resized to **176 × 176** pixels.
-3. A trained Keras model predicts one of **four classes**:
-
-| Class | Meaning |
-|---|---|
-| No Dementia | No signs of dementia detected |
-| Very Mild Dementia | Earliest detectable stage |
-| Mild Dementia | Early stage |
-| Moderate Dementia | More advanced stage |
-
-4. The predicted stage is shown on the result page.
-
-## How it works
-
-### The model
-A 5-layer convolutional neural network built with TensorFlow / Keras:
-
-```
-Input (176×176 MRI) → Convolution → Max Pooling → Dense → Output (4 classes)
-```
-
-![CNN model diagram](docs/cnn-model-diagram.png)
-
-The project report also discusses the **VGG-16** architecture alongside this CNN.
-
-### The web app
-The Flask upload route:
-1. saves the uploaded file safely (`secure_filename`),
-2. loads and resizes it to 176 × 176,
-3. runs it through the model,
-4. picks the class with the highest score and maps it to a stage name.
-
-Excerpt from the report:
-
-```python
-def upload_image():
-    file = request.files['file']
-    file.save(os.path.join("static/uploads", secure_filename(file.filename)))
-
-    imvar = tf.keras.preprocessing.image.load_img(
-        os.path.join("static/uploads", secure_filename(file.filename))).resize((176, 176))
-    imarr = tf.keras.preprocessing.image.img_to_array(imvar)
-    imarr = np.array([imarr])
-    model = tf.keras.models.load_model("model")
-    impred = model.predict(imarr)
-
-    def roundoff(arr):
-        """Round off according to the argmax of each predicted label array."""
-        arr[np.argwhere(arr != arr.max())] = 0
-        arr[np.argwhere(arr == arr.max())] = 1
-        return arr
-    ...
-    classdict = {1: "Mild Dementia", 2: "Moderate Dementia",
-                 3: "No Dementia, Patient is Safe", 4: "Very Mild Dementia"}
-```
-
-## Demo
-
-**1. Upload a scan**
-
-| Home page | File selected |
+## Screenshots
+| Upload page | File selected |
 |---|---|
 | ![home](docs/screenshots/ui-home.jpg) | ![upload](docs/screenshots/ui-upload-with-file.jpg) |
-
-**2. See the prediction**
 
 | No dementia | Very mild dementia |
 |---|---|
@@ -110,47 +47,37 @@ def upload_image():
 |---|---|
 | ![mild](docs/screenshots/result-mild-dementia.jpg) | ![moderate](docs/screenshots/result-moderate-dementia.jpg) |
 
-## Repository structure
-
-```
-alzheimers-mri-detection/
-├── README.md
-└── docs/
-    ├── cnn-model-diagram.png     # CNN architecture
-    ├── screenshots/              # Web app screenshots (upload + 4 results)
-    └── uml/                      # Design diagrams
-        ├── use-case.png
-        ├── class-diagram.png
-        ├── activity-diagram.png
-        └── sequence-diagram.png
-```
-
-> This repository currently holds the **documentation, design diagrams and screenshots** of the project. The trained model, dataset and training notebook are not included.
+## Design (UML)
+Use case, class, activity and sequence diagrams are in [`docs/uml`](docs/uml).
 
 ## Testing
-Two functional tests on the upload flow, both **passed**:
+Two functional tests on the upload flow, both passed:
 
 | # | Test | Expected result |
 |---|---|---|
 | 1 | Image format | A valid `.jpg` is accepted and a result is shown; other formats are rejected |
-| 2 | Image size | A valid-size image is processed; an invalid size asks the user for a correct image |
+| 2 | Image size | A valid-size image is processed; an invalid size prompts the user for a correct image |
 
-## Tech stack
-- **Language:** Python
-- **Deep learning:** TensorFlow, Keras, NumPy
-- **Web app:** Flask, HTML, CSS, JavaScript
-- **Design:** UML (use case, class, activity, sequence diagrams in [`docs/uml`](docs/uml))
+## Technologies used
+Python, TensorFlow / Keras (CNN), NumPy, Flask, HTML, CSS, JavaScript.
+
+## What I learned
+- How CNNs are used for image classification, and how brain MRI images can be classified into four categories.
+- The basic machine learning workflow: image preprocessing, data augmentation, class balancing, model training and prediction.
+- How a Flask web application connects a user interface with a machine learning model to display predictions.
+- Documenting a B.Tech team project, designing UML diagrams, testing application workflows, and presenting technical work on GitHub.
 
 ## Limitations
 - Not tested on clinical data, other MRI scanners or other populations.
-- Classifies single 2D slices only: no 3D context and no patient history.
-- Trained model, dataset and training code are not versioned in this repository.
+- Classifies single 2D images, with no 3D context and no patient history.
+- This repository holds the project documentation, diagrams and screenshots. The source code, trained model and dataset are not included.
 
 ## Team
-Final-year project by **T. Sreya**, **A. Sai Ruthik** and **T. Falguni**.
+B.Tech final-year project by T. Sreya, A. Sai Ruthik and T. Falguni, RGUKT Basar.
 
-- **Guide:** Mr. A. Surender, Assistant Professor
-- **Coordinator:** Mrs. Latha Reddy, Assistant Professor
+Guide: Mr. A. Surender (Assistant Professor). Coordinator: Mrs. Latha Reddy (Assistant Professor).
+
+**Acknowledgement:** The CNN model and Flask app were adapted from the publicly available [BRAIN.MRI](https://github.com/Aytijha/BRAIN.MRI) project.
 
 ## References
 1. M. J. Knight, B. McCann, R. A. Kauppinen, E. J. Coulthard, *Magnetic Resonance Imaging to Detect Early Molecular and Cellular Changes in Alzheimer's Disease*.
