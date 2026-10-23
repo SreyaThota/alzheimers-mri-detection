@@ -66,7 +66,6 @@ Predicting "No Dementia" for every image would score 0.500 accuracy (640 of 1,27
 - **Moderate Dementia has only 12 test images**, so its metrics are very noisy: one image changes recall by 8 percentage points.
 - **Training length was the first thing to fix.** Run 1 hit its 25-epoch cap with validation loss still falling. Run 2 used the same code and seed with a 70-epoch cap; early stopping ended it at epoch 42 (best validation loss at epoch 36). Run 1's outputs are kept outside the repo for comparison. Run 2 was chosen on validation loss alone, but it was trained after run 1's test results had been seen, so the test set is no longer strictly untouched.
 - **Validation accuracy was higher than test accuracy** (run 2: 0.674 vs 0.576; run 1: 0.632 vs 0.552). One possible explanation is that slices from the same subject end up in both training and validation. That can't be verified, because the dataset has no subject IDs.
-- **The 95.73% figure previously associated with the original model is not supported.** The evaluation here measured 63.1% on the held-out test folder.
 
 Full outputs: [`results/`](results/) (metrics JSON, classification reports, confusion matrices, training log, duplicate-check report).
 
