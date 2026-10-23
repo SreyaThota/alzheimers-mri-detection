@@ -1,0 +1,66 @@
+{
+  "test_samples": 1279,
+  "accuracy": 0.631,
+  "balanced_accuracy": 0.4769,
+  "macro_precision": 0.7471,
+  "macro_recall": 0.4769,
+  "macro_f1": 0.5318,
+  "per_class": {
+    "Mild Dementia": {
+      "precision": 0.76,
+      "recall": 0.3184,
+      "f1": 0.4488,
+      "support": 179
+    },
+    "Moderate Dementia": {
+      "precision": 1.0,
+      "recall": 0.25,
+      "f1": 0.4,
+      "support": 12
+    },
+    "No Dementia": {
+      "precision": 0.643,
+      "recall": 0.7656,
+      "f1": 0.699,
+      "support": 640
+    },
+    "Very Mild Dementia": {
+      "precision": 0.5854,
+      "recall": 0.5737,
+      "f1": 0.5795,
+      "support": 448
+    }
+  },
+  "confusion_matrix": [
+    [
+      57,
+      0,
+      77,
+      45
+    ],
+    [
+      0,
+      3,
+      9,
+      0
+    ],
+    [
+      13,
+      0,
+      490,
+      137
+    ],
+    [
+      5,
+      0,
+      186,
+      257
+    ]
+  ],
+  "class_order": [
+    "Mild Dementia",
+    "Moderate Dementia",
+    "No Dementia",
+    "Very Mild Dementia"
+  ]
+}

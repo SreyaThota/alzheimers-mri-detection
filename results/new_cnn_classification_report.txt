@@ -1,0 +1,10 @@
+                    precision    recall  f1-score   support
+
+     Mild Dementia     0.5333    0.1788    0.2678       179
+ Moderate Dementia     0.0000    0.0000    0.0000        12
+       No Dementia     0.6285    0.7984    0.7034       640
+Very Mild Dementia     0.4778    0.4330    0.4543       448
+
+          accuracy                         0.5762      1279
+         macro avg     0.4099    0.3526    0.3564      1279
+      weighted avg     0.5565    0.5762    0.5486      1279

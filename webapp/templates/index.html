@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alzheimer's MRI Classifier</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; color: #1f2937; }
+    h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    .muted { color: #6b7280; font-size: 0.9rem; }
+    form { margin: 24px 0; padding: 16px; border: 1px solid #d1d5db; border-radius: 8px; }
+    button { margin-top: 12px; padding: 8px 20px; background: #2563eb; color: #fff; border: 0; border-radius: 6px; cursor: pointer; }
+    .error { padding: 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; color: #991b1b; }
+    .result { padding: 16px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; }
+    .bar { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.9rem; }
+    .bar span:first-child { width: 150px; }
+    .track { flex: 1; height: 10px; background: #e5e7eb; border-radius: 5px; overflow: hidden; }
+    .fill { height: 100%; background: #2563eb; }
+    .notice { margin-top: 24px; font-size: 0.85rem; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Alzheimer's MRI Classifier</h1>
+  <p class="muted">Upload a brain MRI slice (.jpg or .png) to see the predicted dementia stage.</p>
+
+  {% if model_error %}<p class="error">{{ model_error }}</p>{% endif %}
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".jpg,.jpeg,.png">
+    <br><button type="submit">Classify</button>
+  </form>
+
+  {% if prediction %}
+  <div class="result">
+    <strong>Prediction: {{ prediction.display_name }}</strong> ({{ "%.1f" % (prediction.confidence * 100) }}%)
+    {% for name, p in prediction.probabilities.items() %}
+    <div class="bar">
+      <span>{{ name }}</span>
+      <div class="track"><div class="fill" style="width: {{ "%.1f" % (p * 100) }}%"></div></div>
+      <span>{{ "%.1f" % (p * 100) }}%</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <p class="notice">Academic project. Experimental output only, not for clinical diagnosis.</p>
+</body>
+</html>

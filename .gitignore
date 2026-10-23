@@ -1,0 +1,13 @@
+# Environments and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Data and trained weights are not redistributed (see README: Provenance and licensing)
+data/
+models/
+*.keras
+*.h5
+results/gradcam/

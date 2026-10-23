@@ -1,0 +1,27 @@
+{
+  "train_images": 5121,
+  "test_images": 1279,
+  "train_per_class": {
+    "MildDemented": 717,
+    "ModerateDemented": 52,
+    "NonDemented": 2560,
+    "VeryMildDemented": 1792
+  },
+  "test_per_class": {
+    "MildDemented": 179,
+    "ModerateDemented": 12,
+    "NonDemented": 640,
+    "VeryMildDemented": 448
+  },
+  "exact_duplicates_within_train": 0,
+  "exact_duplicates_within_test": 0,
+  "test_images_identical_to_a_train_image": 0,
+  "of_which_with_different_label": 0,
+  "nearest_train_neighbour_mean_abs_diff": {
+    "p1": 0.0111,
+    "p5": 0.0126,
+    "p25": 0.0257,
+    "p50": 0.039
+  },
+  "note": "Distances are mean absolute pixel differences (0-1 scale) between 22x26 thumbnails. The dataset has no subject IDs, so subject-level overlap cannot be checked."
+}
