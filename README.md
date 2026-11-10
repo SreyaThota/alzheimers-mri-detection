@@ -6,6 +6,14 @@ This started as a **B.Tech final-year team project at RGUKT Basar (2023–24)**.
 
 > **Experimental academic project.** Not a medical device, not clinically validated, and not for diagnosis.
 
+| | |
+|---|---|
+| **What it does** | Classifies a brain MRI slice into No / Very Mild / Mild / Moderate Dementia and explains the prediction with Grad-CAM |
+| **My role** | B.Tech team project (2023–24); in 2026 I rebuilt it as a reproducible pipeline with held-out evaluation and tests |
+| **Stack** | Python · TensorFlow/Keras CNN · Flask · Grad-CAM · pytest |
+| **Key results** | Macro-F1 **0.356** on 1,279 test images (original model 0.532). The rebuild showed the original accuracy claim was not supported, and I report it honestly. |
+| **Quality** | Duplicate/leakage check · class-weighted training · 22 automated tests |
+
 ## What's in this repository
 
 | Part | Status |
